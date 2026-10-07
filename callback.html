@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autorización completada - Pedro Vargas Oficial</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:40px auto;padding:20px;text-align:center;background:#f5f5f5}
+.card{background:#fff;border-radius:12px;padding:30px;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+h1{color:#1a1a1a;font-size:24px}
+.code{background:#f0f0f0;border:1px solid #ddd;border-radius:8px;padding:15px;margin:20px 0;word-break:break-all;font-family:monospace;font-size:14px}
+.success{color:#22c55e;font-size:48px}
+.error{color:#ef4444}
+</style>
+</head>
+<body>
+<div class="card">
+<div id="result">Procesando...</div>
+</div>
+<script>
+const p=new URLSearchParams(location.search);
+const code=p.get('code'), err=p.get('error'), desc=p.get('error_description');
+const el=document.getElementById('result');
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function copyCode(btn){
+  const t=document.getElementById('authcode').textContent;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(
+    ()=>{btn.textContent='¡Copiado! Pasalo al chat';},
+    ()=>{btn.textContent='Copialo a mano y pasalo al chat';});
+}
+if(code){
+el.innerHTML='<div class="success">✓</div><h1>¡Autorización exitosa!</h1>'
++'<p><b>Paso final:</b> copiá este código y <b>mandáselo a panza por el chat</b>. Sin este paso no se completa la conexión:</p>'
++'<div class="code" id="authcode">'+esc(code)+'</div>'
++'<button onclick="copyCode(this)" style="background:#22c55e;color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:16px;cursor:pointer">Copiar código</button>'
++'<p style="color:#666;font-size:14px;margin-top:16px">El código vence en pocos minutos, mandalo ya.</p>';
+}else if(err){
+el.innerHTML='<div class="error" style="font-size:48px">✕</div><h1>Autorización cancelada</h1><p>'+esc(desc||err)+'</p>';
+}else{
+el.innerHTML='<h1>Pedro Vargas Oficial</h1><p>Esta es la página de autorización de TikTok.</p>';
+}
+</script>
+</body>
+</html>
